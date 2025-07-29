@@ -1,27 +1,41 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Музыкальный плеер с добавлением песен</title>
+    <title>GitHub Audio Player</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Orbitron:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             color: #fff;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
+            font-family: 'Montserrat', sans-serif;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://raw.githubusercontent.com/akm-img/free/master/abstract-bg.png') center/cover no-repeat;
+            opacity: 0.05;
+            z-index: -1;
         }
 
         .container {
@@ -29,29 +43,33 @@
             max-width: 1200px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 25px;
         }
 
         header {
             text-align: center;
             padding: 20px;
+            animation: fadeIn 1s ease;
         }
 
         header h1 {
-            font-size: 2.5rem;
+            font-size: 3.2rem;
             margin-bottom: 10px;
-            background: linear-gradient(to right, #e94560, #ff6b6b);
+            background: linear-gradient(to right, #00c9ff, #92fe9d);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
         }
 
         header p {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: #a0a0c0;
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
+            line-height: 1.6;
         }
 
         .player-container {
@@ -60,86 +78,97 @@
             flex-wrap: wrap;
         }
 
-        .add-song-section {
+        .github-section {
             flex: 1;
             min-width: 300px;
-            background: rgba(25, 25, 45, 0.7);
+            background: rgba(20, 20, 40, 0.8);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             height: fit-content;
+            border: 1px solid rgba(0, 201, 255, 0.2);
+            animation: slideInLeft 0.8s ease;
         }
 
-        .add-song-section h2 {
-            margin-bottom: 20px;
+        .github-section h2 {
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            color: #e94560;
+            gap: 12px;
+            color: #00c9ff;
+            font-size: 1.8rem;
         }
 
-        .add-song-section h2 i {
-            font-size: 24px;
+        .github-section h2 i {
+            font-size: 28px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: #b0b0d0;
-            font-size: 14px;
+            font-size: 1rem;
         }
 
         .form-group input {
             width: 100%;
-            padding: 12px 15px;
-            border-radius: 10px;
-            border: none;
-            background: rgba(255, 255, 255, 0.1);
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 2px solid rgba(0, 201, 255, 0.3);
+            background: rgba(0, 0, 0, 0.3);
             color: #fff;
-            font-size: 16px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
         }
 
         .form-group input:focus {
             outline: none;
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.5);
+            border-color: #00c9ff;
+            box-shadow: 0 0 15px rgba(0, 201, 255, 0.5);
+            background: rgba(0, 0, 0, 0.4);
         }
 
-        .add-btn {
+        .github-btn {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             border: none;
-            border-radius: 10px;
-            background: #e94560;
-            color: white;
-            font-size: 16px;
+            border-radius: 12px;
+            background: linear-gradient(to right, #00c9ff, #92fe9d);
+            color: #0f0c29;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 10px;
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(0, 201, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        .add-btn:hover {
-            background: #ff5c77;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+        .github-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 201, 255, 0.5);
         }
 
         .player-section {
             flex: 2;
             min-width: 400px;
-            background: rgba(25, 25, 45, 0.7);
+            background: rgba(20, 20, 40, 0.8);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             display: flex;
             flex-direction: column;
+            border: 1px solid rgba(146, 254, 157, 0.2);
+            animation: slideInRight 0.8s ease;
         }
 
         .player-header {
@@ -148,37 +177,46 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: rgba(0, 0, 0, 0.2);
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 22px;
+            gap: 12px;
+            font-size: 1.5rem;
             font-weight: 600;
         }
 
         .logo i {
-            color: #e94560;
+            color: #92fe9d;
+        }
+
+        .status {
+            font-size: 1rem;
+            color: #00c9ff;
+            font-weight: 500;
         }
 
         .now-playing {
             text-align: center;
             padding: 30px;
+            position: relative;
         }
 
         .album-cover {
-            width: 250px;
-            height: 250px;
+            width: 280px;
+            height: 280px;
             border-radius: 20px;
-            margin: 0 auto 25px;
+            margin: 0 auto 30px;
             overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
             position: relative;
-            background: linear-gradient(45deg, #2c2c54, #40407a);
+            background: linear-gradient(45deg, #1a2a6c, #b21f1f, #1a2a6c);
             display: flex;
             align-items: center;
             justify-content: center;
+            border: 3px solid rgba(0, 201, 255, 0.3);
         }
 
         .album-cover img {
@@ -189,11 +227,11 @@
         }
 
         .album-cover.playing img {
-            animation: rotateAlbum 15s linear infinite;
+            animation: rotateAlbum 20s linear infinite;
         }
 
         .album-cover .placeholder {
-            font-size: 50px;
+            font-size: 60px;
             color: rgba(255, 255, 255, 0.1);
         }
 
@@ -203,39 +241,44 @@
         }
 
         .song-details {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .song-details h2 {
-            font-size: 28px;
+            font-size: 2.2rem;
             margin-bottom: 8px;
+            font-weight: 600;
+            background: linear-gradient(to right, #00c9ff, #92fe9d);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .song-details p {
-            font-size: 18px;
-            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         .visualizer {
-            height: 100px;
+            height: 120px;
             display: flex;
             align-items: flex-end;
             justify-content: center;
-            gap: 4px;
-            margin: 20px 0;
+            gap: 5px;
+            margin: 30px 0;
         }
 
         .bar {
-            width: 8px;
-            background: #e94560;
-            border-radius: 4px 4px 0 0;
+            width: 10px;
+            background: linear-gradient(to top, #00c9ff, #92fe9d);
+            border-radius: 5px 5px 0 0;
             height: 10px;
             animation: barAnimation 1.5s infinite alternate;
         }
 
         @keyframes barAnimation {
             0% { height: 10px; }
-            100% { height: calc(10px + 70px * var(--height)); }
+            100% { height: calc(10px + 100px * var(--height)); }
         }
 
         .progress-area {
@@ -245,53 +288,55 @@
 
         .progress-container {
             background: rgba(255, 255, 255, 0.1);
-            height: 6px;
+            height: 8px;
             border-radius: 10px;
             cursor: pointer;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             position: relative;
+            overflow: hidden;
         }
 
         .progress-bar {
             height: 100%;
             width: 0%;
-            background: #e94560;
+            background: linear-gradient(to right, #00c9ff, #92fe9d);
             border-radius: 10px;
             position: relative;
+            transition: width 0.1s linear;
         }
 
         .progress-bar::after {
             content: "";
             position: absolute;
-            right: -8px;
+            right: -10px;
             top: 50%;
             transform: translateY(-50%);
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             background: #fff;
-            box-shadow: 0 0 10px rgba(233, 69, 96, 0.8);
+            box-shadow: 0 0 15px rgba(0, 201, 255, 0.8);
         }
 
         .timer {
             display: flex;
             justify-content: space-between;
-            font-size: 14px;
+            font-size: 1rem;
             color: rgba(255, 255, 255, 0.7);
-            margin-top: 5px;
+            margin-top: 8px;
         }
 
         .controls {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 25px;
-            margin: 10px 0 30px;
+            gap: 30px;
+            margin: 15px 0 35px;
         }
 
         .control-btn {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
             display: flex;
@@ -299,50 +344,55 @@
             align-items: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            border: 2px solid rgba(0, 201, 255, 0.3);
         }
 
         .control-btn:hover {
-            background: rgba(233, 69, 96, 0.3);
+            background: rgba(0, 201, 255, 0.2);
             transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(0, 201, 255, 0.3);
         }
 
         .control-btn i {
-            font-size: 20px;
+            font-size: 24px;
+            color: #00c9ff;
         }
 
         .play-pause {
-            width: 70px;
-            height: 70px;
-            background: #e94560;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(to right, #00c9ff, #92fe9d);
         }
 
         .play-pause:hover {
-            background: #ff5c77;
             transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 201, 255, 0.5);
         }
 
         .play-pause i {
-            font-size: 28px;
+            font-size: 32px;
+            color: #0f0c29;
         }
 
         .volume-container {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin: 0 20px 20px;
-            padding: 10px 20px;
+            gap: 15px;
+            margin: 0 30px 25px;
+            padding: 12px 25px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 50px;
+            border: 1px solid rgba(0, 201, 255, 0.2);
         }
 
         .volume-container i {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 20px;
+            color: #00c9ff;
+            font-size: 24px;
         }
 
         .volume-slider {
             flex: 1;
-            height: 4px;
+            height: 6px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             position: relative;
@@ -352,27 +402,29 @@
         .volume-progress {
             height: 100%;
             width: 70%;
-            background: #e94560;
+            background: linear-gradient(to right, #00c9ff, #92fe9d);
             border-radius: 10px;
         }
 
         .playlist-section {
             background: rgba(15, 15, 35, 0.6);
-            padding: 20px;
+            padding: 25px;
             overflow-y: auto;
             flex: 1;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .playlist-section h2 {
             margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            color: #e94560;
+            gap: 12px;
+            color: #92fe9d;
+            font-size: 1.6rem;
         }
 
         .playlist-section h2 i {
-            font-size: 22px;
+            font-size: 24px;
         }
 
         .playlist {
@@ -382,44 +434,49 @@
         }
 
         .playlist::-webkit-scrollbar {
-            width: 8px;
+            width: 10px;
         }
 
         .playlist::-webkit-scrollbar-track {
             background: rgba(0, 0, 0, 0.1);
-            border-radius: 4px;
+            border-radius: 5px;
         }
 
         .playlist::-webkit-scrollbar-thumb {
-            background: #e94560;
-            border-radius: 4px;
+            background: linear-gradient(to bottom, #00c9ff, #92fe9d);
+            border-radius: 5px;
         }
 
         .playlist li {
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin-bottom: 8px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .playlist li:hover {
-            background: rgba(233, 69, 96, 0.2);
+            background: rgba(0, 201, 255, 0.15);
+            transform: translateX(5px);
         }
 
         .playlist li.active {
-            background: rgba(233, 69, 96, 0.3);
+            background: rgba(0, 201, 255, 0.25);
+            border-color: rgba(0, 201, 255, 0.4);
+            box-shadow: 0 5px 15px rgba(0, 201, 255, 0.2);
         }
 
         .playlist li img {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
             object-fit: cover;
-            background: #2c2c54;
+            background: linear-gradient(45deg, #1a2a6c, #b21f1f);
         }
 
         .song-info {
@@ -427,68 +484,100 @@
         }
 
         .song-info h3 {
-            font-size: 16px;
-            margin-bottom: 4px;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            font-weight: 500;
         }
 
         .song-info p {
-            font-size: 13px;
+            font-size: 0.95rem;
             color: rgba(255, 255, 255, 0.7);
         }
 
         .song-duration {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 14px;
+            color: #00c9ff;
+            font-size: 1rem;
+            font-weight: 500;
         }
 
         .delete-btn {
             color: rgba(255, 255, 255, 0.5);
-            padding: 5px;
+            padding: 8px;
             cursor: pointer;
             transition: all 0.2s;
+            font-size: 1.2rem;
         }
 
         .delete-btn:hover {
-            color: #e94560;
+            color: #ff6b6b;
             transform: scale(1.1);
         }
 
         .empty-playlist {
             text-align: center;
-            padding: 30px;
+            padding: 40px 20px;
             color: rgba(255, 255, 255, 0.4);
         }
 
         .empty-playlist i {
-            font-size: 50px;
-            margin-bottom: 15px;
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: rgba(0, 201, 255, 0.3);
+        }
+
+        .empty-playlist p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto;
         }
 
         .instructions {
-            background: rgba(25, 25, 45, 0.7);
+            background: rgba(0, 0, 0, 0.2);
             border-radius: 15px;
             padding: 20px;
-            margin-top: 20px;
-            font-size: 14px;
+            margin-top: 25px;
+            font-size: 1rem;
             line-height: 1.6;
+            border: 1px solid rgba(0, 201, 255, 0.2);
         }
 
         .instructions h3 {
-            color: #e94560;
-            margin-bottom: 10px;
+            color: #92fe9d;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            font-size: 1.3rem;
         }
 
         .instructions ul {
-            padding-left: 20px;
-            margin-top: 10px;
+            padding-left: 25px;
+            margin-top: 15px;
         }
 
         .instructions li {
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             color: #b0b0d0;
+        }
+
+        .instructions li strong {
+            color: #00c9ff;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
         @media (max-width: 900px) {
@@ -496,19 +585,19 @@
                 flex-direction: column;
             }
             
-            .add-song-section, .player-section {
+            .github-section, .player-section {
                 width: 100%;
             }
             
             .album-cover {
-                width: 200px;
-                height: 200px;
+                width: 220px;
+                height: 220px;
             }
         }
 
         @media (max-width: 480px) {
             header h1 {
-                font-size: 2rem;
+                font-size: 2.5rem;
             }
             
             .controls {
@@ -516,8 +605,22 @@
             }
             
             .album-cover {
-                width: 180px;
-                height: 180px;
+                width: 200px;
+                height: 200px;
+            }
+            
+            .song-details h2 {
+                font-size: 1.8rem;
+            }
+            
+            .control-btn {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .play-pause {
+                width: 70px;
+                height: 70px;
             }
         }
     </style>
@@ -525,41 +628,41 @@
 <body>
     <div class="container">
         <header>
-            <h1>Музыкальный Плеер</h1>
-            <p>Добавляйте свои песни по ссылкам и наслаждайтесь музыкой</p>
+            <h1><i class="fab fa-github"></i> GitHub Audio Player</h1>
+            <p>Загружайте и слушайте музыку напрямую из ваших GitHub репозиториев</p>
         </header>
         
         <div class="player-container">
-            <div class="add-song-section">
-                <h2><i class="fas fa-plus-circle"></i> Добавить песню</h2>
+            <div class="github-section">
+                <h2><i class="fab fa-github"></i> Загрузить с GitHub</h2>
                 <div class="form-group">
-                    <label for="songTitle">Название песни</label>
+                    <label for="githubRepo">Репозиторий</label>
+                    <input type="text" id="githubRepo" placeholder="username/repository">
+                </div>
+                <div class="form-group">
+                    <label for="audioPath">Путь к аудиофайлу</label>
+                    <input type="text" id="audioPath" placeholder="music/song.mp3">
+                </div>
+                <div class="form-group">
+                    <label for="songTitle">Название песни (опционально)</label>
                     <input type="text" id="songTitle" placeholder="Введите название">
                 </div>
                 <div class="form-group">
-                    <label for="songArtist">Исполнитель</label>
+                    <label for="songArtist">Исполнитель (опционально)</label>
                     <input type="text" id="songArtist" placeholder="Введите исполнителя">
                 </div>
-                <div class="form-group">
-                    <label for="songCover">Ссылка на обложку (необязательно)</label>
-                    <input type="text" id="songCover" placeholder="https://example.com/cover.jpg">
-                </div>
-                <div class="form-group">
-                    <label for="songFile">Ссылка на аудиофайл</label>
-                    <input type="text" id="songFile" placeholder="https://example.com/song.mp3">
-                </div>
-                <button class="add-btn" id="addSongBtn">
-                    <i class="fas fa-music"></i> Добавить песню
+                <button class="github-btn" id="loadSongBtn">
+                    <i class="fas fa-cloud-download-alt"></i> Загрузить песню
                 </button>
                 
                 <div class="instructions">
-                    <h3><i class="fas fa-info-circle"></i> Как добавить песни:</h3>
+                    <h3><i class="fas fa-info-circle"></i> Как использовать:</h3>
                     <ul>
-                        <li>Найдите в интернете прямую ссылку на MP3 файл</li>
-                        <li>Скопируйте ссылку и вставьте в поле "Ссылка на аудиофайл"</li>
-                        <li>Добавьте название и исполнителя</li>
-                        <li>Для обложки можно использовать ссылку на изображение (JPG/PNG)</li>
-                        <li>Нажмите "Добавить песню"</li>
+                        <li>Укажите репозиторий в формате <strong>username/repository</strong></li>
+                        <li>Введите путь к аудиофайлу в репозитории</li>
+                        <li>Для публичных репозиториев файл должен быть в ветке <strong>main</strong> или <strong>master</strong></li>
+                        <li>GitHub Audio Player автоматически сгенерирует прямую ссылку на файл</li>
+                        <li>Нажмите "Загрузить песню" для добавления в плейлист</li>
                     </ul>
                 </div>
             </div>
@@ -567,11 +670,11 @@
             <div class="player-section">
                 <div class="player-header">
                     <div class="logo">
-                        <i class="fas fa-headphones"></i>
-                        <span>MusicPlayer</span>
+                        <i class="fas fa-wave-square"></i>
+                        <span>AudioStream</span>
                     </div>
-                    <div class="status">
-                        <span id="playerStatus">Готов к воспроизведению</span>
+                    <div class="status" id="playerStatus">
+                        Ожидание загрузки
                     </div>
                 </div>
                 
@@ -583,13 +686,13 @@
                         <img src="" alt="Album Cover" id="coverImage" style="display: none;">
                     </div>
                     <div class="song-details">
-                        <h2 id="currentSongTitle">Выберите песню</h2>
-                        <p id="currentArtist">из вашего плейлиста</p>
+                        <h2 id="currentSongTitle">GitHub Audio Player</h2>
+                        <p id="currentArtist">Загрузите свою музыку</p>
                     </div>
                 </div>
                 
                 <div class="visualizer" id="visualizer">
-                    <!-- Бар-визуализатор будет создан через JavaScript -->
+                    <!-- Визуализатор будет создан через JavaScript -->
                 </div>
                 
                 <div class="progress-area">
@@ -628,13 +731,13 @@
                 </div>
                 
                 <div class="playlist-section">
-                    <h2><i class="fas fa-list"></i> Ваш плейлист</h2>
+                    <h2><i class="fas fa-list-music"></i> Ваш плейлист</h2>
                     <ul class="playlist" id="playlist">
                         <li class="empty-playlist">
                             <div>
-                                <i class="fas fa-music"></i>
+                                <i class="fas fa-cloud-download-alt"></i>
                                 <p>Ваш плейлист пуст</p>
-                                <p>Добавьте песни с помощью формы слева</p>
+                                <p>Загрузите музыку с GitHub, используя форму слева</p>
                             </div>
                         </li>
                     </ul>
@@ -646,11 +749,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Элементы DOM
-            const addSongBtn = document.getElementById('addSongBtn');
+            const loadSongBtn = document.getElementById('loadSongBtn');
+            const githubRepoInput = document.getElementById('githubRepo');
+            const audioPathInput = document.getElementById('audioPath');
             const songTitleInput = document.getElementById('songTitle');
             const songArtistInput = document.getElementById('songArtist');
-            const songCoverInput = document.getElementById('songCover');
-            const songFileInput = document.getElementById('songFile');
             
             const playlistElement = document.getElementById('playlist');
             const currentSongTitle = document.getElementById('currentSongTitle');
@@ -671,33 +774,12 @@
             const audio = new Audio();
             let currentSongIndex = -1;
             let isPlaying = false;
-            let playlist = JSON.parse(localStorage.getItem('playlist')) || [];
-
-            // Инициализация плеера
-            function initPlayer() {
-                createVisualizer();
-                renderPlaylist();
-                
-                // Обработчики событий
-                addSongBtn.addEventListener('click', addSong);
-                playPauseBtn.addEventListener('click', togglePlayPause);
-                prevBtn.addEventListener('click', prevSong);
-                nextBtn.addEventListener('click', nextSong);
-                progressContainer.addEventListener('click', setProgress);
-                audio.addEventListener('timeupdate', updateProgress);
-                audio.addEventListener('ended', nextSong);
-                audio.addEventListener('play', () => {
-                    playerStatus.textContent = "Воспроизведение";
-                });
-                audio.addEventListener('pause', () => {
-                    playerStatus.textContent = "Пауза";
-                });
-            }
-
+            let playlist = JSON.parse(localStorage.getItem('githubPlaylist')) || [];
+            
             // Создание визуализатора
             function createVisualizer() {
                 visualizer.innerHTML = '';
-                for (let i = 0; i < 32; i++) {
+                for (let i = 0; i < 36; i++) {
                     const bar = document.createElement('div');
                     bar.classList.add('bar');
                     bar.style.setProperty('--height', Math.random());
@@ -705,64 +787,95 @@
                     visualizer.appendChild(bar);
                 }
             }
-
-            // Добавление песни
-            function addSong() {
-                const title = songTitleInput.value.trim();
-                const artist = songArtistInput.value.trim();
-                const cover = songCoverInput.value.trim();
-                const file = songFileInput.value.trim();
+            
+            // Генерация GitHub Raw URL
+            function generateGitHubRawUrl(repo, path) {
+                return `https://raw.githubusercontent.com/${repo}/main/${path}`;
+            }
+            
+            // Добавление песни из GitHub
+            function addSongFromGitHub() {
+                const repo = githubRepoInput.value.trim();
+                const path = audioPathInput.value.trim();
+                const title = songTitleInput.value.trim() || `Песня из ${repo.split('/')[1]}`;
+                const artist = songArtistInput.value.trim() || "Неизвестный исполнитель";
                 
-                if (!title || !artist || !file) {
-                    alert("Пожалуйста, заполните все обязательные поля");
+                if (!repo || !path) {
+                    showNotification("Пожалуйста, заполните обязательные поля");
                     return;
                 }
                 
-                // Проверка на валидность URL
-                try {
-                    new URL(file);
-                } catch (e) {
-                    alert("Пожалуйста, введите корректную ссылку на аудиофайл");
+                // Проверка формата репозитория
+                if (!repo.includes('/')) {
+                    showNotification("Неверный формат репозитория. Используйте: username/repository");
                     return;
                 }
+                
+                const audioUrl = generateGitHubRawUrl(repo, path);
+                const coverUrl = `https://raw.githubusercontent.com/${repo}/main/cover.jpg`; // Стандартное расположение обложки
                 
                 const newSong = {
                     title,
                     artist,
-                    cover: cover || 'https://via.placeholder.com/300/2c2c54/ffffff?text=No+Cover',
-                    file
+                    cover: coverUrl,
+                    file: audioUrl
                 };
                 
-                playlist.push(newSong);
-                savePlaylist();
-                renderPlaylist();
-                
-                // Очистка формы
-                songTitleInput.value = '';
-                songArtistInput.value = '';
-                songCoverInput.value = '';
-                songFileInput.value = '';
-                
-                // Автовоспроизведение, если это первая песня
-                if (playlist.length === 1) {
-                    playSong(0);
-                }
+                // Проверка доступности аудиофайла
+                checkAudioFile(audioUrl)
+                    .then(() => {
+                        playlist.push(newSong);
+                        savePlaylist();
+                        renderPlaylist();
+                        
+                        // Очистка формы
+                        githubRepoInput.value = '';
+                        audioPathInput.value = '';
+                        songTitleInput.value = '';
+                        songArtistInput.value = '';
+                        
+                        showNotification("Песня успешно добавлена!");
+                        
+                        // Автовоспроизведение, если это первая песня
+                        if (playlist.length === 1) {
+                            setTimeout(() => playSong(0), 1000);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Ошибка загрузки:", error);
+                        showNotification("Не удалось загрузить аудиофайл. Проверьте ссылку и репозиторий.");
+                    });
             }
-
+            
+            // Проверка доступности аудиофайла
+            function checkAudioFile(url) {
+                return new Promise((resolve, reject) => {
+                    fetch(url, { method: 'HEAD' })
+                        .then(response => {
+                            if (response.ok && response.headers.get('content-type').includes('audio')) {
+                                resolve();
+                            } else {
+                                reject(new Error("Файл не найден или не является аудио"));
+                            }
+                        })
+                        .catch(error => reject(error));
+                });
+            }
+            
             // Сохранение плейлиста в localStorage
             function savePlaylist() {
-                localStorage.setItem('playlist', JSON.stringify(playlist));
+                localStorage.setItem('githubPlaylist', JSON.stringify(playlist));
             }
-
+            
             // Отображение плейлиста
             function renderPlaylist() {
                 if (playlist.length === 0) {
                     playlistElement.innerHTML = `
                         <li class="empty-playlist">
                             <div>
-                                <i class="fas fa-music"></i>
+                                <i class="fas fa-cloud-download-alt"></i>
                                 <p>Ваш плейлист пуст</p>
-                                <p>Добавьте песни с помощью формы слева</p>
+                                <p>Загрузите музыку с GitHub, используя форму слева</p>
                             </div>
                         </li>
                     `;
@@ -773,7 +886,7 @@
                 playlist.forEach((song, index) => {
                     const li = document.createElement('li');
                     li.innerHTML = `
-                        <img src="${song.cover}" alt="${song.title}">
+                        <img src="${song.cover}" alt="${song.title}" onerror="this.src='https://via.placeholder.com/300/1a2a6c/ffffff?text=No+Cover'">
                         <div class="song-info">
                             <h3>${song.title}</h3>
                             <p>${song.artist}</p>
@@ -807,12 +920,12 @@
                     });
                 }
             }
-
+            
             // Получение строки длительности (упрощенная версия)
             function getDurationString(index) {
                 return "--:--";
             }
-
+            
             // Удаление песни
             function deleteSong(index) {
                 if (currentSongIndex === index) {
@@ -826,8 +939,9 @@
                 playlist.splice(index, 1);
                 savePlaylist();
                 renderPlaylist();
+                showNotification("Песня удалена из плейлиста");
             }
-
+            
             // Воспроизведение песни
             function playSong(index) {
                 if (index < 0 || index >= playlist.length) return;
@@ -844,7 +958,7 @@
                 audio.src = song.file;
                 audio.play().catch(e => {
                     console.error("Ошибка воспроизведения:", e);
-                    alert("Не удалось воспроизвести песню. Проверьте ссылку на аудиофайл.");
+                    showNotification("Не удалось воспроизвести песню. Проверьте подключение к интернету.");
                 });
                 isPlaying = true;
                 
@@ -852,19 +966,26 @@
                 currentSongTitle.textContent = song.title;
                 currentArtist.textContent = song.artist;
                 coverImage.src = song.cover;
-                coverImage.style.display = 'block';
-                albumCover.querySelector('.placeholder').style.display = 'none';
+                coverImage.onerror = function() {
+                    this.style.display = 'none';
+                    albumCover.querySelector('.placeholder').style.display = 'block';
+                };
+                coverImage.onload = function() {
+                    this.style.display = 'block';
+                    albumCover.querySelector('.placeholder').style.display = 'none';
+                };
                 albumCover.classList.add('playing');
                 playIcon.classList.remove('fa-play');
                 playIcon.classList.add('fa-pause');
                 
                 renderPlaylist();
+                showNotification(`Сейчас играет: ${song.title}`);
             }
-
+            
             // Сброс UI плеера
             function resetPlayerUI() {
-                currentSongTitle.textContent = "Выберите песню";
-                currentArtist.textContent = "из вашего плейлиста";
+                currentSongTitle.textContent = "GitHub Audio Player";
+                currentArtist.textContent = "Загрузите свою музыку";
                 coverImage.style.display = 'none';
                 albumCover.querySelector('.placeholder').style.display = 'block';
                 albumCover.classList.remove('playing');
@@ -873,8 +994,9 @@
                 songDurationElement.textContent = '0:00';
                 playIcon.classList.remove('fa-pause');
                 playIcon.classList.add('fa-play');
+                playerStatus.textContent = "Ожидание загрузки";
             }
-
+            
             // Пауза
             function pauseSong() {
                 audio.pause();
@@ -882,8 +1004,9 @@
                 playIcon.classList.remove('fa-pause');
                 playIcon.classList.add('fa-play');
                 albumCover.classList.remove('playing');
+                playerStatus.textContent = "Пауза";
             }
-
+            
             // Переключение воспроизведения/паузы
             function togglePlayPause() {
                 if (currentSongIndex === -1 && playlist.length > 0) {
@@ -900,12 +1023,13 @@
                         playIcon.classList.remove('fa-play');
                         playIcon.classList.add('fa-pause');
                         albumCover.classList.add('playing');
+                        playerStatus.textContent = "Воспроизведение";
                     } else if (playlist.length > 0) {
                         playSong(0);
                     }
                 }
             }
-
+            
             // Следующая песня
             function nextSong() {
                 if (playlist.length === 0) return;
@@ -916,7 +1040,7 @@
                 }
                 playSong(newIndex);
             }
-
+            
             // Предыдущая песня
             function prevSong() {
                 if (playlist.length === 0) return;
@@ -927,7 +1051,7 @@
                 }
                 playSong(newIndex);
             }
-
+            
             // Обновление прогресса
             function updateProgress() {
                 const { duration, currentTime } = audio;
@@ -951,7 +1075,7 @@
                     songDurationElement.textContent = "--:--";
                 }
             }
-
+            
             // Установка прогресса
             function setProgress(e) {
                 const width = this.clientWidth;
@@ -962,8 +1086,80 @@
                 
                 audio.currentTime = (clickX / width) * duration;
             }
-
+            
+            // Показать уведомление
+            function showNotification(message) {
+                // Создаем элемент уведомления
+                const notification = document.createElement('div');
+                notification.textContent = message;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 15px 25px;
+                    background: rgba(20, 20, 40, 0.9);
+                    color: #00c9ff;
+                    border-radius: 10px;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                    z-index: 1000;
+                    border: 1px solid rgba(0, 201, 255, 0.3);
+                    transform: translateX(100px);
+                    opacity: 0;
+                    transition: all 0.3s ease;
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Показываем уведомление
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(0)';
+                    notification.style.opacity = '1';
+                }, 10);
+                
+                // Убираем уведомление через 3 секунды
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(100px)';
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            }
+            
             // Инициализация плеера
+            function initPlayer() {
+                createVisualizer();
+                renderPlaylist();
+                
+                // Обработчики событий
+                loadSongBtn.addEventListener('click', addSongFromGitHub);
+                playPauseBtn.addEventListener('click', togglePlayPause);
+                prevBtn.addEventListener('click', prevSong);
+                nextBtn.addEventListener('click', nextSong);
+                progressContainer.addEventListener('click', setProgress);
+                audio.addEventListener('timeupdate', updateProgress);
+                audio.addEventListener('ended', nextSong);
+                audio.addEventListener('play', () => {
+                    playerStatus.textContent = "Воспроизведение";
+                });
+                audio.addEventListener('pause', () => {
+                    playerStatus.textContent = "Пауза";
+                });
+                
+                // Пример загрузки тестовой песни при первом запуске
+                if (playlist.length === 0) {
+                    playlist.push({
+                        title: "GitHub Symphony",
+                        artist: "Code Orchestra",
+                        cover: "https://raw.githubusercontent.com/akm-img/free/master/github-music.jpg",
+                        file: "https://raw.githubusercontent.com/akm-img/free/master/sample.mp3"
+                    });
+                    savePlaylist();
+                    renderPlaylist();
+                }
+            }
+            
+            // Запуск инициализации
             initPlayer();
         });
     </script>
